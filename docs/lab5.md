@@ -1,7 +1,5 @@
 # Lab 5: RV64 缺页异常处理与 fork 机制
 
-!!! warning "实验尚未发布，偷跑有返工风险"
-
 ## 实验目的
 
 * 通过 **vm_area_struct** 数据结构实现对进程**多区域**虚拟内存的管理
@@ -234,7 +232,7 @@ struct task_struct {
     ```c
     /*
     * @mm       : current thread's mm_struct
-    * @addr     : the suggested va to map
+    * @addr     : the va to map
     * @len      : memory size to map
     * @vm_pgoff : phdr->p_offset
     * @vm_filesz: phdr->p_filesz
@@ -298,7 +296,7 @@ void do_page_fault(struct pt_regs *regs) {
         - 如果非法（比如触发的是 instruction page fault 但 vma 权限不允许执行），则 `Err` 输出错误信息
         - 其他情况合法，需要我们按接下来的流程创建映射
 3. 分配一个页，接下来要将这个页映射到对应的用户地址空间
-4. 通过 `(vma->vm_flags & VM_ANONYM)` 获得当前的 VMA 是否是匿名空间
+4. 通过 `(vma->vm_flags & VM_ANON)` 获得当前的 VMA 是否是匿名空间
     - 如果是匿名空间，则直接映射即可
     - 如果不是，则需要根据 `vma->vm_pgoff` 等信息从 ELF 中读取数据，填充后映射到用户空间
 
